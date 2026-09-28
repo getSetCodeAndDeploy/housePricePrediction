@@ -84,10 +84,19 @@ public class WhatIfService {
         Set<ConstraintViolation<PropertyInput>> violations = validator.validate(input);
         if (!violations.isEmpty()) {
             throw new InvalidRequestException("Scenario is invalid: " + violations.stream()
-                    .map(v -> v.getPropertyPath() + " " + v.getMessage())
+                    .map(v -> toSnakeCase(v.getPropertyPath().toString()) + " " + v.getMessage())
                     .sorted()
                     .collect(Collectors.joining("; ")));
         }
+    }
+
+    /**
+     * Bean Validation reports the Java field name (e.g. "schoolRating"). The rest of the API -
+     * request/response JSON and the portal - uses snake_case feature keys (e.g. "school_rating"),
+     * so error messages are converted to match instead of leaking the Java-side name.
+     */
+    private static String toSnakeCase(String camel) {
+        return camel.replaceAll("([a-z0-9])([A-Z])", "$1_$2").toLowerCase();
     }
 
     private static double round2(double v) {
