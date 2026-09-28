@@ -8,3 +8,8 @@ target/
 .vscode/
 .DS_Store
 .env
+
+# Debug scratch from initial git setup on this machine - not part of the project
+_broken_git_setup/
+_broken_portal_git/
+_to_delete/

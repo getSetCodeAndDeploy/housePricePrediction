@@ -3,8 +3,9 @@
 Needs: model-api :8000, an App 2 backend on :8002 (the real Java one, or app2-backend/dev-mock), portal :3000.
 Run:  python e2e/market_flow.py   (PORTAL_URL overrides http://localhost:3000)
 """
-import asyncio, os, re, subprocess, tempfile
+import asyncio, os, re, tempfile
 from playwright.async_api import async_playwright, expect
+from pypdf import PdfReader
 PORTAL = os.environ.get("PORTAL_URL", "http://localhost:3000")
 BASE = PORTAL + "/market"
 ok = lambda m: print("PASS", m)
@@ -49,6 +50,7 @@ async def main():
         await pg.wait_for_url(re.compile(r"sortBy=price"))
         await expect(pg.locator('th[aria-sort="ascending"]')).to_have_count(1)
         await pg.get_by_role("button", name=re.compile("^Price")).first.click()
+        await pg.wait_for_url(re.compile(r"dir=desc"))
         await expect(pg.locator('th[aria-sort="descending"]')).to_have_count(1); ok("sort asc/desc toggles aria-sort")
 
         # paging + reload persistence
@@ -72,13 +74,18 @@ async def main():
         dl = await d.value; path = tempfile.mktemp(suffix=".csv"); await dl.save_as(path)
         lines = open(path).read().strip().splitlines(); assert len(lines) == 51, len(lines); ok(f"CSV export: header + {len(lines)-1} rows ({dl.suggested_filename})")
 
-        # PDF
+        # PDF (read back with pypdf - order-independent checks, since text-extraction order
+        # from a table-drawn PDF isn't guaranteed to match the visual row order)
         async with pg.expect_download(timeout=30000) as d:
             await pg.get_by_role("button", name="Export PDF").click()
-        dl = await d.value; pdf = "/tmp/claude-0/logs/report.pdf"; await dl.save_as(pdf)
-        txt = subprocess.run(["pdftotext", "-layout", pdf, "-"], capture_output=True, text=True).stdout
-        assert "Housing market report" in txt and re.search(r"Page 1 of 3", txt); assert len(re.findall(r"^\s*\d+\s+[\d,]+\s+\d", txt, re.M)) == 50
-        ok(f"PDF export ({dl.suggested_filename}, {len(txt.splitlines())} text lines)")
+        dl = await d.value; pdf = tempfile.mktemp(suffix=".pdf"); await dl.save_as(pdf)
+        reader = PdfReader(pdf)
+        txt = "\n".join(page.extract_text() or "" for page in reader.pages)
+        assert "Housing market report" in txt, txt[:200]
+        assert re.search(r"Page 1 of \d+", txt), "no page footer found"
+        dollar_signs = txt.count("$")
+        assert dollar_signs == 5 + 2 * 50, f"expected 105 '$' figures (5 summary + 2x50 rows), got {dollar_signs}"
+        ok(f"PDF export ({dl.suggested_filename}, {len(reader.pages)} pages, {dollar_signs} '$' figures)")
 
         # tabs keyboard
         await pg.get_by_role("tab", name="What-if analysis").focus()
