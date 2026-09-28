@@ -1,0 +1,18 @@
+server:
+  port: 8002
+
+model:
+  api-url: ${MODEL_API_URL:http://localhost:8000}
+  connect-timeout: 2s
+  read-timeout: 5s
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE      # JSON matches the model API / App 1 (square_footage, ...)
+    default-property-inclusion: non_null
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

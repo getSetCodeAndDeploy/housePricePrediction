@@ -1,0 +1,38 @@
+# One command to run everything:  docker compose up --build
+services:
+  model-api:            # Task 1 - regression model
+    build: ./model-api
+    ports: ["8000:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  app1-backend:         # Task 2 / App 1 - Python (FastAPI)
+    build: ./app1-backend
+    environment:
+      MODEL_API_URL: http://model-api:8000
+    volumes: ["app1-data:/srv/data"]   # estimate history survives restarts
+    ports: ["8001:8001"]
+    depends_on:
+      model-api: { condition: service_healthy }
+
+  app2-backend:         # Task 2 / App 2 - Java 21 (Spring Boot 3.4.4)
+    build: ./app2-backend
+    environment:
+      MODEL_API_URL: http://model-api:8000
+    ports: ["8002:8002"]
+    depends_on:
+      model-api: { condition: service_healthy }
+
+  portal:               # Task 2 - Next.js (App Router)
+    build: ./portal
+    environment:
+      APP1_API_URL: http://app1-backend:8001
+      APP2_API_URL: http://app2-backend:8002
+    ports: ["3000:3000"]
+    depends_on: [app1-backend, app2-backend]
+
+volumes:
+  app1-data:

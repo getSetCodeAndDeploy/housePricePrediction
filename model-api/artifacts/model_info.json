@@ -1,0 +1,184 @@
+{
+  "model_type": "ridge_positive_alpha_0.1",
+  "algorithm": "Ridge",
+  "hyperparameters": {
+    "alpha": 0.1,
+    "copy_X": true,
+    "fit_intercept": true,
+    "max_iter": null,
+    "positive": true,
+    "random_state": null,
+    "solver": "auto",
+    "tol": 0.0001
+  },
+  "features": [
+    "square_footage",
+    "bedrooms",
+    "bathrooms",
+    "year_built",
+    "lot_size",
+    "distance_to_city_center",
+    "school_rating"
+  ],
+  "target": "price",
+  "intercept": -748566.8719575558,
+  "coefficients": {
+    "square_footage": 21.086971148900773,
+    "bedrooms": 4318.111447184623,
+    "bathrooms": 16929.051769446483,
+    "year_built": 330.45564459315807,
+    "lot_size": 8.695022771021497,
+    "distance_to_city_center": 12869.51643572808,
+    "school_rating": 19402.27190176158
+  },
+  "standardized_coefficients": {
+    "square_footage": 8875.53496386322,
+    "bedrooms": 3226.759161297812,
+    "bathrooms": 11759.295175076568,
+    "year_built": 3311.0336377744975,
+    "lot_size": 16286.583068782029,
+    "distance_to_city_center": 24630.102720710383,
+    "school_rating": 15379.577709115834
+  },
+  "feature_means": {
+    "square_footage": 1690.2,
+    "bedrooms": 3.04,
+    "bathrooms": 1.85,
+    "year_built": 1996.26,
+    "lot_size": 7232.0,
+    "distance_to_city_center": 4.638,
+    "school_rating": 7.774
+  },
+  "metrics": {
+    "cross_validation": {
+      "r2": 0.9776971688199264,
+      "r2_std": 0.019109307549343115,
+      "mae": 8439.000741080832,
+      "rmse": 10007.076541783026
+    },
+    "cross_validation_method": "RepeatedKFold(n_splits=5, n_repeats=10)",
+    "training": {
+      "r2": 0.9820592622838108,
+      "mae": 8845.87167978694,
+      "rmse": 10652.337562096965
+    }
+  },
+  "model_comparison": {
+    "linear_regression": {
+      "r2": 0.9693933993479357,
+      "r2_std": 0.06606456287395557,
+      "mae": 7496.856541611426,
+      "rmse": 10517.382931027494
+    },
+    "ridge_alpha_0.01": {
+      "r2": 0.9710272770156686,
+      "r2_std": 0.05990662697914728,
+      "mae": 7429.986363742081,
+      "rmse": 10337.547949299305
+    },
+    "ridge_alpha_0.1": {
+      "r2": 0.9768321911620927,
+      "r2_std": 0.03568745379308394,
+      "mae": 7361.608213466294,
+      "rmse": 9707.520512520467
+    },
+    "ridge_alpha_0.3": {
+      "r2": 0.9786210340693848,
+      "r2_std": 0.024590963808751917,
+      "mae": 7679.020939749983,
+      "rmse": 9601.746800868817
+    },
+    "ridge_alpha_1.0": {
+      "r2": 0.9775626822548193,
+      "r2_std": 0.021264763810203792,
+      "mae": 8461.40397912479,
+      "rmse": 10011.876990653533
+    },
+    "ridge_alpha_3.0": {
+      "r2": 0.973832385948307,
+      "r2_std": 0.02315627317551345,
+      "mae": 9605.837120929646,
+      "rmse": 10930.458652297903
+    },
+    "ridge_alpha_10.0": {
+      "r2": 0.9678385661523531,
+      "r2_std": 0.026000924749858226,
+      "mae": 11019.692785093783,
+      "rmse": 12331.558824047917
+    },
+    "ridge_positive_alpha_0.01": {
+      "r2": 0.9758434898904972,
+      "r2_std": 0.023930866343955498,
+      "mae": 8773.84005424956,
+      "rmse": 10297.83824458471
+    },
+    "ridge_positive_alpha_0.1": {
+      "r2": 0.9776971688199264,
+      "r2_std": 0.019109307549343115,
+      "mae": 8439.000741080832,
+      "rmse": 10007.076541783026
+    },
+    "ridge_positive_alpha_0.3": {
+      "r2": 0.9774457756189773,
+      "r2_std": 0.02375884592046674,
+      "mae": 8262.77839138639,
+      "rmse": 9875.996119961308
+    },
+    "ridge_positive_alpha_1.0": {
+      "r2": 0.9773638189945903,
+      "r2_std": 0.021527607994684915,
+      "mae": 8560.439743322497,
+      "rmse": 10055.794761754012
+    },
+    "ridge_positive_alpha_3.0": {
+      "r2": 0.9738284500333763,
+      "r2_std": 0.02317312535953251,
+      "mae": 9606.035513769617,
+      "rmse": 10930.894864394006
+    },
+    "ridge_positive_alpha_10.0": {
+      "r2": 0.96783733373024,
+      "r2_std": 0.02599998351177301,
+      "mae": 11019.722071183514,
+      "rmse": 12331.742954874788
+    }
+  },
+  "training_rows": 50,
+  "feature_ranges": {
+    "square_footage": {
+      "min": 980.0,
+      "max": 2400.0
+    },
+    "bedrooms": {
+      "min": 2.0,
+      "max": 4.0
+    },
+    "bathrooms": {
+      "min": 1.0,
+      "max": 3.0
+    },
+    "year_built": {
+      "min": 1978.0,
+      "max": 2012.0
+    },
+    "lot_size": {
+      "min": 4400.0,
+      "max": 10500.0
+    },
+    "distance_to_city_center": {
+      "min": 2.1,
+      "max": 8.2
+    },
+    "school_rating": {
+      "min": 6.5,
+      "max": 9.1
+    }
+  },
+  "trained_at": "2026-09-26T08:44:43.563383+00:00",
+  "sklearn_version": "1.5.2",
+  "notes": [
+    "Only 50 training rows; features are highly collinear (pairwise r > 0.9).",
+    "Individual coefficients should be interpreted with caution; predictions are more reliable than coefficient signs.",
+    "Predictions outside the training feature ranges are extrapolations."
+  ]
+}

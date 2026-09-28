@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+node_modules/
+.next/
+target/
+.idea/
+.vscode/
+.DS_Store
+.env

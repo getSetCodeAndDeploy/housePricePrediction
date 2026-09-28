@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* ---------- Design tokens (single source of truth for both apps) ----------
+   Semantic names, so components never hard-code colours and dark mode is one override block. */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #f1f3f9;
+  --line: #e2e6f0;
+  --fg: #12172b;
+  --muted: #5b6480;
+  --brand: #4f46e5;
+  --brand-fg: #ffffff;
+  --brand-soft: #eef0ff;
+  --danger: #b42318;
+  --danger-soft: #fef3f2;
+  --success: #067647;
+  --success-soft: #ecfdf3;
+  --warn: #b54708;
+  --warn-soft: #fffaeb;
+  /* Chart colours: validated with the dataviz palette checker (colour-blind separation + contrast, light & dark). */
+  --chart-pos: #2a78d6;
+  --chart-neg: #e34948;
+  --chart-bar: #2a78d6;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1020;
+    --surface: #151a30;
+    --surface-2: #1c2240;
+    --line: #2a3157;
+    --fg: #e8ebf7;
+    --muted: #9aa3c4;
+    --brand: #8b93ff;
+    --brand-fg: #0d1020;
+    --brand-soft: #23285a;
+    --danger: #f97066;
+    --danger-soft: #3a1a1a;
+    --success: #47cd89;
+    --success-soft: #10301f;
+    --warn: #fdb022;
+    --warn-soft: #35270a;
+    --chart-pos: #3987e5;
+    --chart-neg: #e66767;
+    --chart-bar: #3987e5;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-fg);
+  --color-brand-soft: var(--brand-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-chart-pos: var(--chart-pos);
+  --color-chart-neg: var(--chart-neg);
+  --color-chart-bar: var(--chart-bar);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --animate-fade-in: fade-in 220ms ease-out both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+/* One consistent, visible keyboard focus style everywhere (WCAG 2.4.7). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Respect users who ask for less motion (WCAG 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
