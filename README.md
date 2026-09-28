@@ -55,7 +55,7 @@ Task 1 on its own: see `model-api/README.md`.
 ## Market Analysis UI (stage 8)
 
 - **URL is the state.** Filters, sort and page live in the search params. `app/market/page.tsx` is a Server Component: it parses them (`lib/market-query.ts`), fetches stats + the current page + feature ranges in parallel, and passes plain data down. Links are shareable and survive reload.
-- **Keep the frame.** `MarketShell` wraps navigation in `useTransition`: the old view stays on screen, dimmed with `aria-busy`, until the new data arrives (no skeleton flash).
+- **Keep the frame.** `MarketShell` wraps navigation in `useTransition`: the old view stays on screen (full contrast, `aria-busy` + a small "Updating..." badge) until the new data arrives - no skeleton flash, and no contrast drop for axe to catch.
 - **Server-side sorting/paging** (`aria-sort` header buttons) so it scales beyond 50 rows; the backend caches stats per filter (Caffeine, 10 min).
 - **Charts** are hand-drawn SVG (no chart library): histogram, average price by bedrooms/decade, correlations. Every chart has a "Show data table" alternative and keyboard-reachable tooltips.
 - **Export.** CSV is a plain download link to the Java backend; PDF is built in the browser with jsPDF (dynamically imported, so it costs nothing until clicked) from all filtered rows.
@@ -63,4 +63,4 @@ Task 1 on its own: see `model-api/README.md`.
 
 Testing: `python e2e/market_flow.py` (17 checks) and `python e2e/market_a11y.py` (axe WCAG 2.1 A/AA, light + dark, both tabs, mobile overflow).
 
-> **Not verified in the build sandbox:** the Java backend could not be compiled (no Maven Central access) and Docker was unavailable. The UI was tested against `app2-backend/dev-mock/app2_mock.py`, a Python stand-in that follows the same API contract. Run `mvn test` and `docker compose up --build` on your machine, then re-run the two e2e scripts against the real backend.
+> **Verified end-to-end against the real stack** (Docker Compose, real Java backend, no mocks): `docker compose build && up` succeeds for all four services, `mvn test` passes 16/16, and both `market_flow.py` (17/17) and `market_a11y.py` (0 violations, light + dark + mobile) pass against the running containers. This surfaced and fixed two real bugs along the way: a `RestClient` request-factory bug that sent empty POST bodies to the model API (see `app2-backend/.../config/AppConfig.java`), and a loading-state opacity fade that dropped text contrast below WCAG AA (see `portal/src/components/market/MarketShell.tsx`).

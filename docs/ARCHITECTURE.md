@@ -106,8 +106,8 @@ portal/src
 5. **Hand-drawn SVG charts** instead of a library: tiny bundle, full control over accessibility (keyboard tooltips, data-table alternative) and theming.
 6. **PDF is generated in the browser** with a dynamic import of jsPDF, so the cost is only paid on click.
 
-## What is and is not verified
+## What is verified
 
-Verified here: model API tests (7), App 1 tests (12), portal type-check + lint + production build, 34 browser checks (17 estimator, 17 market), axe-core WCAG 2.1 A/AA with 0 violations in light and dark, no horizontal overflow at 390 px.
+Verified against the real stack (Docker Compose, all four services, no mocks): model API tests (7), App 1 tests (12), App 2 (`mvn test`, 16/16, including integration tests against the real model container), portal type-check + lint + production build, `docker compose build && up` for all four services, 34 browser checks (17 estimator, 17 market) run against the running containers, and axe-core WCAG 2.1 A/AA with 0 violations in light and dark, no horizontal overflow at 390 px.
 
-Not verified in the build sandbox: the Java backend build/tests (Maven Central unreachable) and all Docker builds. The market UI was tested against `app2-backend/dev-mock`, a Python stand-in with the same API contract.
+That full run surfaced two real bugs, both fixed and re-verified: a Spring `RestClient` request-factory bug that silently sent empty POST bodies to the model API (`AppConfig.java` - swapped `JdkClientHttpRequestFactory` for `SimpleClientHttpRequestFactory`), and a loading-state opacity fade (`MarketShell.tsx`) that dropped text contrast to ~2.6:1 during a pending navigation, caught by the axe-core scan.

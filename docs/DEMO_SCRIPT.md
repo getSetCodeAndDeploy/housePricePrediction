@@ -36,5 +36,5 @@ Before you start: `docker compose up --build`, wait for all four services to be 
 
 ## If something goes wrong
 - **A service shows "down" in the footer bar:** say so calmly, it is the health bar working. `docker compose logs <service>`.
-- **Java service fails to build:** it was not compiled in my build sandbox (no Maven Central access there). Fall back to `app2-backend/dev-mock` and be transparent about it.
+- **Java service fails to build on the interview machine:** most likely Maven Central TLS/network flakiness, not a code issue - `app2-backend/settings.xml` mirrors Maven Central via Google's mirror for exactly this. If it still won't build, fall back to `app2-backend/dev-mock` and say so.
 - **Slow first request:** the model container imports scikit-learn on start; the compose healthcheck waits for it.

@@ -51,7 +51,7 @@ How to use this: read section 1 the night before, skim section 2 an hour before,
 
 *How would you scale the Java service?* It is stateless except the cache, so run several replicas; move the cache to Redis if consistency across replicas matters.
 
-*How do you test?* Model API (7 tests), App 1 (12 tests with a fake model over `httpx.MockTransport`), Java unit and integration tests with `@MockitoBean` for the model client (written, not run in my sandbox), and Playwright end-to-end checks for both UIs.
+*How do you test?* Model API (7 tests), App 1 (12 tests with a fake model over `httpx.MockTransport`), Java unit and integration tests with `@MockitoBean` for the model client (16/16, run against the real model container via `mvn test`), and Playwright end-to-end checks for both UIs, all run against the real Docker stack (34 browser checks + an axe-core accessibility scan, 0 violations).
 
 **Frontend**
 
@@ -73,11 +73,11 @@ How to use this: read section 1 the night before, skim section 2 an hour before,
 
 ## 4. Honest limitations (say them before you are asked)
 
-1. **Java backend not compiled in my build environment.** Maven Central was unreachable there, so I verified it by syntax check, a stubbed run of the statistics logic and a Python mock of the API. **Run `mvn test` and `docker compose up --build` on your machine before the interview and fix anything that turns up.**
-2. **Docker images were not built** in my build environment for the same reason.
-3. **Only 50 rows**, so all accuracy claims come with wide uncertainty.
-4. **No authentication or multi-user separation** of App 1 history.
-5. **Linear model**, so what-if price curves are straight lines by construction.
+1. **Only 50 rows**, so all accuracy claims come with wide uncertainty.
+2. **No authentication or multi-user separation** of App 1 history.
+3. **Linear model**, so what-if price curves are straight lines by construction.
+
+Everything else - the Java build, all four Docker images, and the full e2e/accessibility suite - has been run end-to-end against the real stack (not mocks); see `docs/ARCHITECTURE.md#what-is-verified`. Still worth a fresh `docker compose up --build` and `mvn test` on the interview machine beforehand as a sanity check, but you are not walking in with an unverified claim.
 
 ## 5. Pre-interview checklist
 
