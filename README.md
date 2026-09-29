@@ -29,22 +29,22 @@ docker compose up --build
 Task 1 on its own: see `model-api/README.md`.
 
 ## Status
-- [x] Stage 1-2: model + API + Dockerfile
-- [x] Stage 3: repo skeleton + compose
-- [x] Stage 4: App 1 backend (Python)
-- [x] Stage 5: App 2 backend (Java) - written; run `mvn test` to verify the build
-- [x] Stage 6: portal shell (layout, design system, error/loading boundaries, API proxy, status bar)
-- [x] Stage 7: Estimator UI (form + validation, result table + chart, history, comparison)
-- [x] Stage 8: Market Analysis UI (filters, stats, charts, sortable table, CSV/PDF export, what-if + price curve)
-- [x] Stage 9: polish (architecture, demo script, interview guide)
+- [x] Model + prediction API + Dockerfile
+- [x] Repo skeleton + Docker Compose wiring for all four services
+- [x] App 1 backend (Python)
+- [x] App 2 backend (Java) - `mvn test` passes (16/16) against the real model container
+- [x] Portal shell (layout, design system, error/loading boundaries, API proxy, status bar)
+- [x] Estimator UI (form + validation, result table + chart, history, comparison)
+- [x] Market Analysis UI (filters, stats, charts, sortable table, CSV/PDF export, what-if + price curve)
+- [x] Docs (architecture, demo script, interview guide), full stack verified end-to-end
 
-## Portal conventions (stage 6)
+## Portal conventions
 - **Browser -> portal only.** Client code calls `/api/app1/*` and `/api/app2/*` (a Next.js route-handler proxy to the backends): no CORS, internal service names stay private, only `/api/*` paths are forwarded.
 - **Server Components fetch initial data**; expected failures (backend down) render an inline `Alert` with a Retry button, unexpected ones fall to the route's `error.tsx`. Each route has its own `loading.tsx` skeleton.
 - **Design tokens** live in `portal/src/app/globals.css` (semantic colours + automatic dark mode); UI primitives are in `portal/src/components/ui/`.
 - **Accessibility:** skip link, visible focus ring, `aria-current` nav, labelled form fields with linked errors, `prefers-reduced-motion` respected. Automated axe-core scan (WCAG 2.1 A/AA): 0 violations on all pages, light and dark.
 
-## Estimator UI (stage 7)
+## Estimator UI
 - **Data flow:** `estimator/page.tsx` (Server Component) loads history from App 1 on the server and passes it to the client `EstimatorWorkspace`. Mutations go browser -> `/api/app1/*` proxy -> App 1 -> model API.
 - **State:** a Zustand store created *per provider* (a module-level store would leak data between visitors during SSR). The store is updated only from confirmed server responses. Form state and validation live in `useEstimateForm`; API calls in `useEstimates`.
 - **Validation:** `lib/validation.ts` is the single source for the form fields and their rules (mirroring the backend limits). Errors show on blur, then update live; a failed submit focuses the first invalid field; server 422 field errors map back onto inputs.
@@ -52,7 +52,7 @@ Task 1 on its own: see `model-api/README.md`.
 - **Charts:** hand-built, responsive HTML bars following the dataviz skill's mark specs; colours validated for colour-blind separation and contrast in light and dark.
 - **Tests:** `portal/e2e/estimator_flow.py` (17 checks: validation, estimate, history, compare, delete, warnings) and `portal/e2e/a11y_scan.py` (axe-core, all states, light + dark).
 
-## Market Analysis UI (stage 8)
+## Market Analysis UI
 
 - **URL is the state.** Filters, sort and page live in the search params. `app/market/page.tsx` is a Server Component: it parses them (`lib/market-query.ts`), fetches stats + the current page + feature ranges in parallel, and passes plain data down. Links are shareable and survive reload.
 - **Keep the frame.** `MarketShell` wraps navigation in `useTransition`: the old view stays on screen (full contrast, `aria-busy` + a small "Updating..." badge) until the new data arrives - no skeleton flash, and no contrast drop for axe to catch.
