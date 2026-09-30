@@ -39,6 +39,7 @@ public class AppConfig implements WebMvcConfigurer {
      * Caffeine caches: the dataset is static and the model is deterministic, so results for a given
      * input can be reused. TTL bounds staleness if the model container is retrained/redeployed.
      */
+    
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager manager = new CaffeineCacheManager("marketStats", "whatIf", "sweep");
