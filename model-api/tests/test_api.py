@@ -17,7 +17,11 @@ def client():
 
 def test_health(client):
     r = client.get("/health")
-    assert r.status_code == 200 and r.json() == {"status": "ok", "model_loaded": True}
+    j = r.json()
+    assert r.status_code == 200
+    assert j["status"] == "ok"
+    assert j["model_loaded"] is True
+    assert isinstance(j["uptime_seconds"], (int, float)) and j["uptime_seconds"] >= 0
 
 
 def test_model_info(client):

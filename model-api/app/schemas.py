@@ -49,3 +49,4 @@ class PredictResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     model_loaded: bool
+    uptime_seconds: float

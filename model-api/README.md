@@ -17,7 +17,7 @@ Swagger UI: http://localhost:8000/docs
 |---|---|---|
 | POST | `/predict` | One property (object) or many (`{"instances": [...]}`) |
 | GET | `/model-info` | Coefficients, intercept, CV/training metrics, model comparison |
-| GET | `/health` | Liveness + model-loaded flag |
+| GET | `/health` | Liveness + model-loaded flag + uptime (seconds since startup) |
 
 ## Retrain / test
 ```bash

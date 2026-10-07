@@ -83,7 +83,8 @@ async def _estimate_one(model: ModelClient, req: EstimateRequest) -> tuple[dict,
 # ---- routes ---------------------------------------------------------------------------------
 @app.get("/health")
 async def health():
-    return {"status": "ok", "service": "app1-backend"}
+    uptime_seconds=time.monotonic()-SERVICE_START_TIME
+    return {"status": "ok", "service": "app1-backend", "uptime_seconds":roud(uptime_seconds,2)}
 
 
 @app.get("/health/model")

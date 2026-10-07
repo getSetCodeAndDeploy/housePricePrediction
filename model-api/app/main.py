@@ -1,3 +1,4 @@
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
@@ -14,6 +15,7 @@ state: dict = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     state["svc"] = ModelService()  # fail fast at startup if artifacts are missing
+    state["started_at"] = time.monotonic()
     yield
     state.clear()
 
@@ -47,7 +49,8 @@ def svc() -> ModelService:
 
 @app.get("/health", response_model=HealthResponse, tags=["ops"])
 def health():
-    return HealthResponse(status="ok", model_loaded="svc" in state)
+    uptime = time.monotonic() - state["started_at"] if "started_at" in state else 0.0
+    return HealthResponse(status="ok", model_loaded="svc" in state, uptime_seconds=round(uptime, 2))
 
 
 @app.get("/model-info", tags=["model"])
